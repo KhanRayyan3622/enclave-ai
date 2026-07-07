@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  enclave:
+    build: .
+    ports:
+      - "7860:7860"
+    env_file:
+      - .env
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./results:/app/results
+    # In production deployment, this network can be set to `internal: true`
+    # with no external egress, since Enclave requires no external calls
+    # once the model is loaded locally.
