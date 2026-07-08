@@ -1,0 +1,20 @@
+{
+  "hardware": "AMD Instinct MI300X (hackathon allocation)",
+  "model": "Qwen/Qwen2-7B-Instruct",
+  "model_load": {
+    "weights_gb": 14.35,
+    "load_time_s": 9.3,
+    "total_init_time_s": 16.44,
+    "kv_cache_gb": 3.03,
+    "kv_cache_tokens": 56768
+  },
+  "pipeline_run": {
+    "research_tokens": 400,
+    "research_time_s": 12.12,
+    "audit_tokens": 376,
+    "audit_time_s": 11.52,
+    "total_tokens": 776,
+    "total_time_s": 23.64,
+    "avg_tokens_per_sec": 32.8
+  }
+}

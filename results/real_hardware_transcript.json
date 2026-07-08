@@ -1,0 +1,25 @@
+{
+  "task": "Loan application compliance review - Jane Doe",
+  "research_agent_output": " The loan application is for a conventional mortgage.\n\nThe relevant fair-lending and DTI policy requirements for reviewing a loan application in this context are as follows:\n\n1. **Fair Lending Laws**:\n   - **Equal Credit Opportunity Act (ECOA)**: This law prohibits discrimination in credit transactions based on race, color, religion, national origin, sex, marital status, or age (for applicants 40 years or older). It requires creditors to provide equal treatment and equal access to credit for all applicants.\n   - **Fair Housing Act (FHA)**: This law prohibits discrimination in the sale, rental, and financing of housing based on race, color, national origin, religion, sex, familial status, or disability. It applies to mortgage lending practices that affect housing.\n   - **Fair Credit Reporting Act (FCRA)**: This law regulates the collection, dissemination, and use of consumer credit information. It requires creditors to provide accurate information to credit reporting agencies and to give consumers access to their credit reports and the right to dispute inaccuracies.\n\n2. **Down Payment and Loan-to-Value (LTV) Ratio**:\n   - For conventional mortgages, the LTV ratio is typically capped at 80% for loans without mortgage insurance. In this case, the loan amount is $400,000, and the income is $75,000. The borrower would need to provide at least a 20% down payment, which is $80,000, to meet the LTV ratio requirement.\n\n3. **Debt-to-Income (DTI) Ratio**:\n   - The DTI ratio is a measure of a borrower's ability to manage monthly debt payments. A DTI ratio of 38% is within the acceptable range for most conventional mortgage lenders. However, the specific DTI limit can vary by lender and may be influenced by other factors such as credit score, loan type, and the borrower",
+  "auditor_agent_output": " The loan application for Jane Doe is **PASS**.\n\n**Fair Lending Compliance:**\n- **Equal Credit Opportunity Act (ECOA)**: There is no indication of discrimination based on race, color, religion, national origin, sex, marital status, or age. The application process should ensure that all applicants are treated equally and have equal access to credit.\n- **Fair Housing Act (FHA)**: The application does not involve housing transactions, so this law does not directly apply. However, it's important to ensure that the lender's practices do not indirectly discriminate against protected classes.\n- **Fair Credit Reporting Act (FCRA)**: The lender should verify that the credit report provided by Jane Doe is accurate and up-to-date. The credit score of 720 is generally considered good, which should facilitate approval.\n\n**Down Payment and Loan-to-Value (LTV) Ratio:**\n- Jane Doe needs to provide a 20% down payment, which is $80,000, to meet the LTV ratio requirement of 80% for a conventional mortgage without mortgage insurance. This requirement is met.\n\n**Debt-to-Income (DTI) Ratio:**\n- Jane Doe's DTI ratio is 38%, which is within the acceptable range for most conventional mortgage lenders. This indicates that she has a manageable debt load relative to her income.\n\n**Credit Score and Employment History:**\n- A credit score of 720 and employment for 3 years are generally positive indicators for loan approval. These factors contribute to a favorable risk assessment for the lender.\n\nGiven that the application meets the requirements for fair lending, down payment, LTV ratio, DTI ratio, and creditworthiness, the loan application for Jane Doe is compliant and should be approved. Therefore, the final compliance verdict is **PASS**.",
+  "metrics": {
+    "hardware": "AMD Instinct MI300X (hackathon allocation)",
+    "model": "Qwen/Qwen2-7B-Instruct",
+    "model_load": {
+      "weights_gb": 14.35,
+      "load_time_s": 9.3,
+      "total_init_time_s": 16.44,
+      "kv_cache_gb": 3.03,
+      "kv_cache_tokens": 56768
+    },
+    "pipeline_run": {
+      "research_tokens": 400,
+      "research_time_s": 12.12,
+      "audit_tokens": 376,
+      "audit_time_s": 11.52,
+      "total_tokens": 776,
+      "total_time_s": 23.64,
+      "avg_tokens_per_sec": 32.8
+    }
+  }
+}
