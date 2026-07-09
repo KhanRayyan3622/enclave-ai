@@ -10,6 +10,7 @@ from openai import AsyncOpenAI
 from agents.research_agent import ResearchAgent
 from agents.analyst_agent import AnalystAgent
 from agents.auditor_agent import AuditorAgent
+from agents.audit_chain import AuditChain
 
 ORCHESTRATOR_SYSTEM = """You are the Orchestrator of Enclave, a sovereign on-premise
 multi-agent compliance AI system running entirely on a single AMD Instinct MI300X node.
@@ -41,6 +42,7 @@ class OrchestratorAgent:
             "analyst": AnalystAgent(client=client, model=model),
             "auditor": AuditorAgent(client=client, model=model),
         }
+        self.audit_chain = AuditChain()
 
     async def _plan(self, task: str) -> dict:
         response = await self.client.chat.completions.create(
@@ -94,6 +96,7 @@ class OrchestratorAgent:
             agent = self.agents[agent_name]
             result = await agent.run(agent_task)
             results[agent_name] = result
+            self.audit_chain.add_entry(agent_name, agent_task, result["result"])
             total_tokens += result["tokens"]
             agent_trace.append({
                 "agent": agent_name,
@@ -104,9 +107,12 @@ class OrchestratorAgent:
         total_time = time.perf_counter() - pipeline_start
         final_output = results.get("auditor", list(results.values())[-1])
 
+        self.audit_chain.save()
         return {
             "task": task,
             "plan": plan,
+            "audit_chain_verified": self.audit_chain.verify(),
+            "audit_chain_entries": len(self.audit_chain.chain),
             "results": results,
             "final_output": final_output["result"],
             "trace": agent_trace,
