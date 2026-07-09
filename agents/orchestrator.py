@@ -16,6 +16,7 @@ from agents.sovereignty_score import compute_sovereignty_score
 from agents.escalation import generate_escalation_packet
 from agents.gemma_verifier import gemma_second_opinion
 from agents.framework_mapper import map_to_frameworks
+from agents.eu_ai_act_doc import generate_annex_iv_snippet
 
 ORCHESTRATOR_SYSTEM = """You are the Orchestrator of Enclave, a sovereign on-premise
 multi-agent compliance AI system running entirely on a single AMD Instinct MI300X node.
@@ -143,8 +144,18 @@ class OrchestratorAgent:
 
         escalation = generate_escalation_packet(verdict, auditor_text)
 
+        annex_iv_doc = generate_annex_iv_snippet(
+            task=task,
+            verdict=verdict,
+            framework_coverage=framework_coverage,
+            sovereignty_score=sovereignty,
+            audit_chain_verified=self.audit_chain.verify(),
+            model_name=self.model,
+        )
+
         return {
             "task": task,
+            "eu_ai_act_annex_iv_doc": annex_iv_doc,
             "plan": plan,
             "audit_chain_verified": self.audit_chain.verify(),
             "audit_chain_entries": len(self.audit_chain.chain),
