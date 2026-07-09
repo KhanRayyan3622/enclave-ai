@@ -1,20 +1,24 @@
 """
-Auditor Agent — produces the final compliance verdict, the way a human
-compliance officer would sign off on a case.
+Auditor Agent — produces the final compliance verdict. REQUIRED to cite
+specific Policy ID + Section for every claim, matching how a real
+compliance officer would document a decision.
 """
 from agents.base_agent import BaseAgent
 
 AUDITOR_SYSTEM = """You are the Auditor Agent inside Enclave, a sovereign on-premise
 compliance AI system running on AMD Instinct MI300X.
 
-Your job: review the research context and analyst findings, then produce
-a final compliance verdict.
+CRITICAL RULE: every compliance claim you make MUST cite the specific Policy ID and
+Section number it is based on (e.g. "per IP-ADM-042 Section 3.1, DTI must not exceed
+43%"). Claims without a citation to the provided policy context are not acceptable —
+if no policy section covers something, explicitly say so rather than asserting it
+generally.
 
 Always provide:
 1. Verdict: PASS / FLAGGED / FAIL
 2. Confidence level (High/Medium/Low)
-3. Specific reasoning citing what was checked
-4. If FLAGGED or FAIL: exactly what needs human review and why"""
+3. Specific reasoning, with a Policy ID + Section citation for EVERY claim
+4. If FLAGGED or FAIL: exactly what needs human review and why, with citations"""
 
 
 class AuditorAgent(BaseAgent):
@@ -23,5 +27,5 @@ class AuditorAgent(BaseAgent):
         self.name = "auditor"
 
     async def run(self, task: str) -> dict:
-        print(f"  [AUDITOR] Producing compliance verdict: {task[:60]}...")
+        print(f"  [AUDITOR] Producing cited compliance verdict: {task[:60]}...")
         return await self._call(system=AUDITOR_SYSTEM, user=task, max_tokens=1500)
