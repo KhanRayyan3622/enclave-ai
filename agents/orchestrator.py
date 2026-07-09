@@ -11,6 +11,10 @@ from agents.research_agent import ResearchAgent
 from agents.analyst_agent import AnalystAgent
 from agents.auditor_agent import AuditorAgent
 from agents.audit_chain import AuditChain
+from agents.integrity_manifest import IntegrityManifest
+from agents.sovereignty_score import compute_sovereignty_score
+from agents.escalation import generate_escalation_packet
+from agents.gemma_verifier import gemma_second_opinion
 
 ORCHESTRATOR_SYSTEM = """You are the Orchestrator of Enclave, a sovereign on-premise
 multi-agent compliance AI system running entirely on a single AMD Instinct MI300X node.
@@ -43,6 +47,7 @@ class OrchestratorAgent:
             "auditor": AuditorAgent(client=client, model=model),
         }
         self.audit_chain = AuditChain()
+        self.integrity_manifest = IntegrityManifest(model_name=model)
 
     async def _plan(self, task: str) -> dict:
         response = await self.client.chat.completions.create(
@@ -108,11 +113,44 @@ class OrchestratorAgent:
         final_output = results.get("auditor", list(results.values())[-1])
 
         self.audit_chain.save()
+
+        auditor_result = results.get("auditor", list(results.values())[-1])
+        auditor_text = auditor_result["result"]
+
+        verdict_match = auditor_text.upper()
+        if "FAIL" in verdict_match:
+            verdict = "FAIL"
+        elif "FLAGGED" in verdict_match:
+            verdict = "FLAGGED"
+        else:
+            verdict = "PASS"
+
+        gemma_check = await gemma_second_opinion(verdict, auditor_text)
+
+        sovereignty = compute_sovereignty_score(
+            data_residency_bytes=0,
+            audit_chain_verified=self.audit_chain.verify(),
+            single_node_fit=True,
+            auditor_output=auditor_text,
+        )
+
+        manifest = self.integrity_manifest.generate(
+            decision_hash=self.audit_chain.chain[-1]["hash"] if self.audit_chain.chain else ""
+        )
+        self.integrity_manifest.save(manifest)
+
+        escalation = generate_escalation_packet(verdict, auditor_text)
+
         return {
             "task": task,
             "plan": plan,
             "audit_chain_verified": self.audit_chain.verify(),
             "audit_chain_entries": len(self.audit_chain.chain),
+            "sovereignty_score": sovereignty,
+            "integrity_manifest_hash": manifest["manifest_hash"],
+            "escalation": escalation,
+            "verdict": verdict,
+            "gemma_second_opinion": gemma_check,
             "results": results,
             "final_output": final_output["result"],
             "trace": agent_trace,
