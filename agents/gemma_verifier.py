@@ -34,14 +34,14 @@ In one sentence, does this verdict look internally consistent with the reasoning
     try:
         async with httpx.AsyncClient(timeout=15) as client:
             resp = await client.post(
-                f"https://generativelanguage.googleapis.com/v1beta/models/gemma-3-27b-it:generateContent?key={api_key}",
+                f"https://generativelanguage.googleapis.com/v1beta/models/gemma-4-26b-a4b-it:generateContent?key={api_key}",
                 json={"contents": [{"parts": [{"text": prompt}]}]},
             )
             data = resp.json()
             text = data["candidates"][0]["content"]["parts"][0]["text"]
             return {
                 "checked": True,
-                "model": "gemma-3-27b-it",
+                "model": "gemma-4-26b-a4b-it",
                 "response": text.strip(),
             }
     except Exception as e:
