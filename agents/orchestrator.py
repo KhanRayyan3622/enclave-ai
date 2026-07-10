@@ -17,6 +17,7 @@ from agents.escalation import generate_escalation_packet
 from agents.gemma_verifier import gemma_second_opinion
 from agents.framework_mapper import map_to_frameworks
 from agents.eu_ai_act_doc import generate_annex_iv_snippet
+from agents.flow_visualizer import generate_flow_svg
 
 ORCHESTRATOR_SYSTEM = """You are the Orchestrator of Enclave, a sovereign on-premise
 multi-agent compliance AI system running entirely on a single AMD Instinct MI300X node.
@@ -153,7 +154,7 @@ class OrchestratorAgent:
             model_name=self.model,
         )
 
-        return {
+        result_dict = {
             "task": task,
             "eu_ai_act_annex_iv_doc": annex_iv_doc,
             "plan": plan,
@@ -172,3 +173,6 @@ class OrchestratorAgent:
             "total_time_seconds": round(total_time, 2),
             "data_residency": "0 bytes left this node",
         }
+
+        result_dict["flow_diagram_svg"] = generate_flow_svg(result_dict)
+        return result_dict
