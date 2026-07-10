@@ -11,6 +11,8 @@ from inference.fireworks_client import get_client, DEFAULT_MODEL
 from agents.orchestrator import OrchestratorAgent
 from agents.evidence_package import generate_evidence_pdf
 from agents.audit_chain import AuditChain
+from agents.reaudit import compare_runs
+from dataclasses import asdict
 import hashlib
 import json
 
@@ -133,6 +135,39 @@ async def verify_audit_chain(request: VerifyRequest):
         verified=True,
         entries_checked=len(chain),
         detail=f"All {len(chain)} entries verified. Chain is unbroken and unmodified.",
+    )
+
+
+class ReAuditResponse(BaseModel):
+    drift_detected: bool
+    summary: str
+    original_verdict: str
+    new_verdict: str
+    score_delta: float
+    citation_overlap_pct: float
+
+
+@app.post("/reaudit", response_model=ReAuditResponse)
+async def reaudit(request: ReviewRequest):
+    """
+    Re-runs the same task twice and compares results, demonstrating
+    continuous audit-readiness / drift detection.
+    """
+    if not request.task.strip():
+        raise HTTPException(status_code=400, detail="Task cannot be empty")
+
+    original_result = await orchestrator_instance.execute(request.task)
+    new_result = await orchestrator_instance.execute(request.task)
+
+    drift = compare_runs(original_result, new_result)
+
+    return ReAuditResponse(
+        drift_detected=drift.drift_detected,
+        summary=drift.summary,
+        original_verdict=drift.original_verdict,
+        new_verdict=drift.new_verdict,
+        score_delta=drift.score_delta,
+        citation_overlap_pct=drift.citation_overlap_pct,
     )
 
 
