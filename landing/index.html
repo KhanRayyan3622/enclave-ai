@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enclave — The AI That Never Leaves the Building</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap');
+
+  :root{
+    --vault-black:#0B0C0E;
+    --vault-panel:#131417;
+    --vault-panel-2:#181A1E;
+    --brass:#C9A34E;
+    --brass-dim:#8A7038;
+    --verified:#3E9270;
+    --verified-dim:#1E4433;
+    --fail:#B23A2E;
+    --paper:#EDE7DA;
+    --paper-dim:#9A9488;
+    --hairline:#2A2C31;
+    --serif:'Fraunces', Georgia, serif;
+    --mono:'JetBrains Mono', Consolas, monospace;
+    --sans:'Inter', -apple-system, sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--vault-black);
+    color:var(--paper);
+    font-family:var(--sans);
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  a{color:inherit;}
+
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, rgba(201,163,78,0.08), transparent 60%),
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 3px);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .wrap{max-width:1080px; margin:0 auto; padding:0 28px; position:relative; z-index:1;}
+
+  nav{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:26px 0; border-bottom:1px solid var(--hairline);
+  }
+  .brand{
+    font-family:var(--serif); font-weight:600; font-size:20px; letter-spacing:0.01em;
+    display:flex; align-items:center; gap:10px;
+  }
+  .brand .mark{
+    width:10px; height:10px; border:1.5px solid var(--brass); border-radius:50%;
+    box-shadow: inset 0 0 0 2px var(--vault-black), 0 0 0 1px var(--brass-dim);
+  }
+  .nav-links{display:flex; gap:32px; font-family:var(--mono); font-size:11.5px; letter-spacing:0.06em; text-transform:uppercase; color:var(--paper-dim);}
+  .nav-links a:hover{color:var(--brass);}
+
+  .hero{padding:110px 0 90px; text-align:center; position:relative;}
+  .eyebrow{
+    font-family:var(--mono); font-size:11.5px; letter-spacing:0.18em; text-transform:uppercase;
+    color:var(--brass); margin-bottom:28px; display:inline-flex; align-items:center; gap:8px;
+  }
+  .eyebrow .dot{width:6px; height:6px; border-radius:50%; background:var(--verified); box-shadow:0 0 8px var(--verified);}
+  h1{
+    font-family:var(--serif); font-weight:600; font-size:clamp(38px,6vw,64px);
+    line-height:1.08; letter-spacing:-0.01em; max-width:820px; margin:0 auto 26px;
+  }
+  h1 em{font-style:italic; color:var(--brass); font-weight:500;}
+  .subhead{
+    font-size:17px; color:var(--paper-dim); max-width:560px; margin:0 auto 44px; line-height:1.7;
+  }
+  .cta-row{display:flex; gap:16px; justify-content:center; flex-wrap:wrap;}
+  .btn{
+    font-family:var(--sans); font-weight:600; font-size:14.5px;
+    padding:14px 30px; border-radius:6px; text-decoration:none; display:inline-block;
+    transition:transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .btn-primary{background:var(--brass); color:var(--vault-black);}
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 8px 24px rgba(201,163,78,0.25);}
+  .btn-ghost{border:1px solid var(--hairline); color:var(--paper);}
+  .btn-ghost:hover{border-color:var(--brass); color:var(--brass);}
+
+  .seal-row{display:flex; justify-content:center; margin-top:70px;}
+  .seal{
+    width:150px; height:150px; border-radius:50%;
+    border:2px solid var(--brass-dim);
+    display:flex; align-items:center; justify-content:center; position:relative;
+    background:radial-gradient(circle at 35% 30%, rgba(201,163,78,0.09), transparent 65%);
+  }
+  .seal::before{
+    content:""; position:absolute; inset:9px; border:1px dashed var(--brass-dim); border-radius:50%; opacity:0.6;
+  }
+  .seal-text{
+    font-family:var(--mono); font-size:9.5px; letter-spacing:0.1em; color:var(--brass);
+    text-align:center; line-height:1.7; text-transform:uppercase;
+  }
+  .seal-text .big{font-family:var(--serif); font-style:italic; font-size:15px; color:var(--paper); display:block; margin-bottom:4px;}
+
+  section{padding:80px 0; border-top:1px solid var(--hairline);}
+  .section-head{margin-bottom:48px;}
+  .section-eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--brass); margin-bottom:12px;}
+  .section-title{font-family:var(--serif); font-size:32px; font-weight:600; max-width:600px;}
+
+  .problem-grid{display:grid; grid-template-columns:1fr 1fr; gap:40px;}
+  .problem-card{
+    background:var(--vault-panel); border:1px solid var(--hairline); border-radius:10px; padding:26px;
+  }
+  .problem-card .label{font-family:var(--mono); font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--fail); margin-bottom:10px;}
+  .problem-card p{color:var(--paper-dim); font-size:14.5px;}
+
+  .flow{display:flex; align-items:center; gap:0; flex-wrap:wrap; margin-top:20px;}
+  .flow-box{
+    background:var(--vault-panel); border:1px solid var(--hairline); border-radius:8px;
+    padding:18px 20px; flex:1; min-width:140px; text-align:center;
+  }
+  .flow-box .name{font-family:var(--mono); font-size:12px; letter-spacing:0.05em; color:var(--brass); font-weight:600;}
+  .flow-box .role{font-size:11.5px; color:var(--paper-dim); margin-top:4px;}
+  .flow-arrow{color:var(--brass-dim); font-size:18px; padding:0 10px;}
+
+  .node-note{
+    margin-top:28px; padding:16px 20px; border-left:2px solid var(--verified);
+    background:var(--verified-dim); border-radius:0 8px 8px 0;
+    font-family:var(--mono); font-size:12.5px; color:var(--paper);
+  }
+
+  table{width:100%; border-collapse:collapse; margin-top:10px; font-size:13.5px;}
+  th{
+    font-family:var(--mono); font-size:10.5px; letter-spacing:0.06em; text-transform:uppercase;
+    color:var(--brass); text-align:left; padding:12px 14px; border-bottom:1px solid var(--hairline);
+  }
+  td{padding:14px; border-bottom:1px solid var(--hairline); color:var(--paper-dim);}
+  td:first-child{color:var(--paper); font-weight:500;}
+  .check{color:var(--verified);}
+  .cross{color:var(--fail);}
+
+  .feature-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:20px;}
+  .feature{background:var(--vault-panel); border:1px solid var(--hairline); border-radius:10px; padding:22px;}
+  .feature .num{font-family:var(--mono); font-size:11px; color:var(--brass-dim); margin-bottom:10px;}
+  .feature h3{font-family:var(--serif); font-size:17px; font-weight:600; margin-bottom:8px;}
+  .feature p{font-size:13px; color:var(--paper-dim);}
+
+  .metrics{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--hairline); border:1px solid var(--hairline); border-radius:10px; overflow:hidden; margin-top:20px;}
+  .metric{background:var(--vault-panel); padding:26px 20px; text-align:center;}
+  .metric .val{font-family:var(--serif); font-size:30px; font-weight:600; color:var(--brass);}
+  .metric .lbl{font-family:var(--mono); font-size:10px; letter-spacing:0.06em; text-transform:uppercase; color:var(--paper-dim); margin-top:6px;}
+
+  .final-cta{text-align:center; padding:100px 0;}
+  .final-cta h2{font-family:var(--serif); font-size:36px; font-weight:600; margin-bottom:18px;}
+  .final-cta p{color:var(--paper-dim); max-width:480px; margin:0 auto 36px;}
+
+  footer{border-top:1px solid var(--hairline); padding:32px 0; font-family:var(--mono); font-size:11px; color:var(--paper-dim); display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;}
+
+  @media (max-width:720px){
+    .problem-grid{grid-template-columns:1fr;}
+    .feature-grid{grid-template-columns:1fr;}
+    .metrics{grid-template-columns:1fr 1fr;}
+    .nav-links{display:none;}
+    .flow{flex-direction:column;}
+    .flow-arrow{transform:rotate(90deg); padding:6px 0;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav>
+    <div class="brand"><span class="mark"></span>Enclave</div>
+    <div class="nav-links">
+      <a href="#architecture">Architecture</a>
+      <a href="#comparison">Why It Matters</a>
+      <a href="#features">Capabilities</a>
+    </div>
+    <a href="http://localhost:7860" class="btn btn-ghost" style="padding:9px 20px; font-size:13px;">Launch Dashboard →</a>
+  </nav>
+
+  <section class="hero" style="border-top:none;">
+    <div class="eyebrow"><span class="dot"></span>AMD Developer Hackathon — Unicorn Track</div>
+    <h1>The multi-agent AI system<br>that <em>never leaves</em> the building.</h1>
+    <p class="subhead">
+      A sovereign compliance pipeline — four coordinated agents, one AMD
+      Instinct node, zero bytes of network egress. Built for banks,
+      hospitals, and agencies that legally cannot send sensitive data
+      to a cloud API.
+    </p>
+    <div class="cta-row">
+      <a href="http://localhost:7860" class="btn btn-primary">Launch the Dashboard</a>
+      <a href="https://github.com/KhanRayyan3622/enclave-ai" class="btn btn-ghost">View Source</a>
+    </div>
+
+    <div class="seal-row">
+      <div class="seal">
+        <div class="seal-text">
+          <span class="big">Verified</span>
+          Single-Node · Zero Egress<br>SHA-256 Audit Chain
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="problem">
+    <div class="section-head">
+      <div class="section-eyebrow">The Problem</div>
+      <div class="section-title">Regulated data can't take the trip to the cloud.</div>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="label">Compliance Violation</div>
+        <p>Sending patient records, financial filings, or loan applications to a third-party API is often a violation before the first token is generated — GDPR, HIPAA, and sovereign-AI mandates require data to stay in a controlled environment.</p>
+      </div>
+      <div class="problem-card">
+        <div class="label">The Old Tradeoff</div>
+        <p>Most "on-prem AI" runs one small model on one small GPU — a fraction of what cloud-based agentic AI can do. Real compliance work needs a full multi-agent pipeline, not a compromise.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="architecture">
+    <div class="section-head">
+      <div class="section-eyebrow">The Architecture</div>
+      <div class="section-title">Four agents. One node. No exceptions.</div>
+    </div>
+    <div class="flow">
+      <div class="flow-box"><div class="name">ORCHESTRATOR</div><div class="role">plans the review</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box"><div class="name">RESEARCHER</div><div class="role">retrieves policy</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box"><div class="name">ANALYST</div><div class="role">extracts the data</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box"><div class="name">AUDITOR</div><div class="role">issues the verdict</div></div>
+    </div>
+    <div class="node-note">
+      → 192GB HBM3 on a single AMD Instinct GPU is the only reason this
+      fits on ONE node. On an 80GB card, the same workload needs 2–3
+      GPUs networked together — and every network hop is an attack
+      surface a compliance auditor has to sign off on.
+    </div>
+  </section>
+
+  <section id="comparison">
+    <div class="section-head">
+      <div class="section-eyebrow">Why This Can't Just Be an API Call</div>
+      <div class="section-title">The difference is architectural, not just cheaper.</div>
+    </div>
+    <table>
+      <tr><th></th><th>Cloud API</th><th>Enclave on AMD Instinct</th></tr>
+      <tr><td>Data leaves the building</td><td><span class="check">—</span> Yes, every request</td><td><span class="cross">✕</span> Never</td></tr>
+      <tr><td>Network hops for the full pipeline</td><td>N/A — data already left</td><td>0 — single node</td></tr>
+      <tr><td>GPUs needed at production scale</td><td>2–3× H100 (80GB each)</td><td>1× MI300X (192GB)</td></tr>
+      <tr><td>Every claim cited to policy</td><td>Rarely enforced</td><td>Required — no citation, no claim</td></tr>
+      <tr><td>Tamper-evidence</td><td>Vendor's word</td><td>SHA-256 chain, independently verifiable</td></tr>
+    </table>
+  </section>
+
+  <section id="features">
+    <div class="section-head">
+      <div class="section-eyebrow">Capabilities</div>
+      <div class="section-title">Built like a product, not a demo.</div>
+    </div>
+    <div class="feature-grid">
+      <div class="feature"><div class="num">01</div><h3>Grounded Citations</h3><p>Every claim the Auditor makes cites a specific internal Policy ID and Section — never a general assertion.</p></div>
+      <div class="feature"><div class="num">02</div><h3>Tamper-Evident Chain</h3><p>A SHA-256 hash chain over every agent step, independently re-verifiable by anyone via a public endpoint.</p></div>
+      <div class="feature"><div class="num">03</div><h3>Regulator-Ready PDF</h3><p>One click generates a filed-document-ready evidence package: verdict, citations, sovereignty score, audit hash.</p></div>
+      <div class="feature"><div class="num">04</div><h3>EU AI Act Mapping</h3><p>Every decision auto-maps to Annex IV, NIST AI RMF, and ISO/IEC 42001 — the frameworks regulators actually check.</p></div>
+      <div class="feature"><div class="num">05</div><h3>Human Escalation</h3><p>Any FLAGGED or FAIL verdict auto-routes to the correct reviewer role with a clear SLA — no silent auto-denials.</p></div>
+      <div class="feature"><div class="num">06</div><h3>REST API + Batch</h3><p>A callable service any loan-origination or EHR system can integrate — plus CSV batch review at scale.</p></div>
+    </div>
+  </section>
+
+  <section id="metrics">
+    <div class="section-head">
+      <div class="section-eyebrow">Verified on Real Hardware</div>
+      <div class="section-title">Not simulated. Measured on AMD Instinct MI300X.</div>
+    </div>
+    <div class="metrics">
+      <div class="metric"><div class="val">1.9×</div><div class="lbl">Concurrent Speedup</div></div>
+      <div class="metric"><div class="val">0</div><div class="lbl">Bytes Egress</div></div>
+      <div class="metric"><div class="val">94/100</div><div class="lbl">Sovereignty Score</div></div>
+      <div class="metric"><div class="val">100%</div><div class="lbl">Claims Cited</div></div>
+    </div>
+  </section>
+
+  <section class="final-cta" style="border-top:1px solid var(--hairline);">
+    <h2>See it review a real case.</h2>
+    <p>Paste an application. Watch four agents reason, cite policy, and issue a verdict — entirely on one node.</p>
+    <a href="http://localhost:7860" class="btn btn-primary">Launch the Dashboard →</a>
+  </section>
+
+  <footer>
+    <div>Enclave — AMD Developer Hackathon ACT II, Unicorn Track</div>
+    <div>Built on ROCm · vLLM · AMD Instinct MI300X</div>
+  </footer>
+</div>
+
+</body>
+</html>
