@@ -261,3 +261,38 @@ table {
   overflow-x: auto !important;
   white-space: nowrap !important;
 }
+
+/* Force plain body text in markdown blocks to white for readability */
+.prose p {
+  color: #FFFFFF !important;
+}
+
+/* Force example text to white */
+.gr-samples-table, .gr-samples-table *, 
+div[data-testid="dataset"], div[data-testid="dataset"] * {
+  color: #FFFFFF !important;
+}
+
+/* Blunt fallback: force white text on any button/cell inside the examples region,
+   using attribute-substring selectors that don't depend on exact Gradio class names */
+button[class*="example"], 
+[class*="dataset"] button,
+[class*="dataset"] td,
+[class*="dataset"] span,
+[id*="component"] table button {
+  color: #FFFFFF !important;
+}
+
+/* Extremely broad fallback - target any button containing our known example text patterns via generic low-specificity override */
+.gradio-container button {
+  color: inherit;
+}
+.gradio-container button:not(.primary) {
+  color: #FFFFFF !important;
+}
+
+/* On hover, example buttons invert to black text (assumes a light hover background) */
+.gradio-container button:not(.primary):hover {
+  color: #000000 !important;
+  background: #FFFFFF !important;
+}
